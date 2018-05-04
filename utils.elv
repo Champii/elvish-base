@@ -10,7 +10,21 @@ fn json [file]{
   cat $file | from-json
 }
 
-fn filter [f a]{
+fn optional_in [rest]{
+  arr = []
+
+  if (not (eq (count $rest) 1)) {
+    arr = (all)
+  } else {
+    arr = $rest[0]
+  }
+
+  put $arr
+}
+
+fn filter [f @rest]{
+  a = (optional_in $rest)
+
   @res = (for x $a {
     if ($f $x) {
       put $x
@@ -20,7 +34,9 @@ fn filter [f a]{
   put $res
 }
 
-fn map [f a]{
+fn map [f @rest]{
+  a = (optional_in $rest)
+
   @res = (for x $a {
     put ($f $x)
   })
@@ -40,15 +56,24 @@ fn floor [x]{
   put $r[0]
 }
 
-fn zipMap [f arr]{
+fn zipMap [f @rest]{
+  arr = (optional_in $rest)
+
   res = (map [x]{
     @in = ($f $x)
+
     put [$x $@in]
   } $arr)
+
   put $res
 }
 
 fn _table_tab_size [arr]{
+  if (eq (count $arr) 0) {
+    put []
+    return
+  }
+
   @max = (repeat (count $arr[0]) 0)
 
   each [line]{
@@ -68,7 +93,9 @@ fn _table_tab_size [arr]{
   put $max
 }
 
-fn table_print [arr]{
+fn table_print [@rest]{
+  arr = (optional_in $rest)
+
   tab_size = (_table_tab_size $arr)
 
   each [line]{

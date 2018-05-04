@@ -9,8 +9,6 @@ It will download every dependencies, no need to install them yourself
 
 ```
 use epm
-use re
-use readline-binding
 
 epm:install                              \
   &silent-if-installed=$true             \
@@ -34,6 +32,16 @@ use github.com/zzamboni/elvish-modules/util
 ```
 
 # Api
+
+Signature type nomenclature follows the schema:
+
+```
+func_name[arg1 arg2 optionalArg?] => return_type
+```
+
+Optional args are achieved using `utils:optional_in~`. cf `map` or `filter` implementation.
+
+If an optional arg is not given, it will take `(all)`
 
 ## fs
 
@@ -169,18 +177,22 @@ use github.com/zzamboni/elvish-modules/util
   ▶ someValue
   ```
 
-- filter[func arr] => arr
+- filter[func arr?] => arr
 
   Filter the array with the predicate
+
+  If the last argument `arr` is not set, will take input from value channel
 
   ```
   ~> utils:filter $fs:exists~ [/tmp/foo /tmp/bar]
   ▶ [/tmp/foo]
   ```
 
-- map[func arr] => arr
+- map[func arr?] => arr
 
   Map the predicate over the array
+
+  If the last argument `arr` is not set, will take input from value channel
 
   ```
   ~> utils:map $fs:exists~ [/tmp/foo /tmp/bar]
@@ -196,22 +208,43 @@ use github.com/zzamboni/elvish-modules/util
   ▶ 33
   ```
 
-- zipMap[func arr] => arr
+- optional_in[arr] => arr
+
+  Used to take the input of (all) if the last parameter is not set
+
+  ```
+  fn zipMap [f @rest]{
+    arr = (optional_in $rest)
+
+    res = (map [x]{
+      @in = ($f $x)
+
+      put [$x $@in]
+    } $arr)
+
+    put $res
+  }
+  ```
+
+- zipMap[func arr?] => arr
 
   Takes an array (1 dimension) and produces an array of array (2 dimensions)
+
+  If the last argument `arr` is not set, will take input from value channel
 
   For each item, the callback can return as many elements as wanted, that will be added with the original element into an array.
 
   ```
-  ~> fs:list_gt (fs:mega 100) |
-     utils:zipMap $fs:pretty_size~ (all) |
-     utils:table_print (all)
+  ~> fs:list_gt (fs:mega 100) | utils:zipMap $fs:pretty_size~ | utils:table_print
   file1.ext        2Go
   file13334.ext    133Mo
   file23.ext       101Mo
   file12332223.ext 633Mo
   ```
 
-- table_print[arr] => void
+- table_print[arr?] => void
 
   Pretty print a 2D array
+
+  If the last argument `arr` is not set, will take input from value channel
+
