@@ -1,3 +1,6 @@
+use github.com/champii/elvish-base/utils
+use github.com/champii/elvish-base/git
+
 edit:prompt = {
   edit:styled "\n┌─[" red;
   edit:styled (tilde-abbr $pwd) lightyellow;
@@ -10,17 +13,17 @@ edit:prompt = {
   edit:styled ']' red;
 
 
-  if ?(git rev-parse --abbrev-ref HEAD 2>&- > /dev/null) {
+  if (not (utils:has_failed { git:branch })) {
     put '-';
 
     edit:styled '[' red;
-    edit:styled (put (git rev-parse --abbrev-ref HEAD)) lightblue;
+    edit:styled (git:branch) lightblue;
 
     put '@';
 
-    edit:styled (put (put (git rev-parse HEAD))[:6]) green;
+    edit:styled (put (git:commit_id)[:6]) green;
 
-    if (not ?(git diff-index --quiet HEAD 2>&- > /dev/null)) {
+    if (git:is_dirty) {
       edit:styled '*' yellow;
     }
 

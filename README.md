@@ -143,6 +143,35 @@ If an optional arg is not given, it will take `(all)`
   ▶ 1.073741824e+10
   ```
 
+## git
+
+- branch[] => string
+
+  Returns the current branch, or fails if not a git repo
+
+  ```
+  ~> git:branch
+  ▶ master
+  ```
+
+- commit_id[] => string
+
+  Returns the last commit id from the current branch, or fails if not a git repo
+
+  ```
+  ~> git:commit_id
+  ▶ 3220a9726f4ccf04af79a7cf20d17ccce017fc51
+  ```
+
+- is_dirty[] => bool
+
+  Returns $true whenever there is some uncommited change
+
+  ```
+  ~> git:is_dirty
+  ▶ $true
+  ```
+
 ## utils
 
 - null_out[func] => func

@@ -1,15 +1,3 @@
-fn null_out [f]{
-  { $f 2>&- > /dev/null }
-}
-
-fn has_failed [p]{
-  eq (bool ?(null_out $p)) $false
-}
-
-fn json [file]{
-  cat $file | from-json
-}
-
 fn optional_in [rest]{
   arr = []
 
@@ -20,6 +8,30 @@ fn optional_in [rest]{
   }
 
   put $arr
+}
+
+fn to_list [@rest]{
+  arr = []
+
+  if (not (eq (count $rest) 1)) {
+    @arr = (all)
+  } else {
+    arr = $rest[0]
+  }
+
+  put $arr
+}
+
+fn null_out [f]{
+  { $f 2>&- > /dev/null }
+}
+
+fn has_failed [p]{
+  eq (bool ?(null_out $p)) $false
+}
+
+fn json [file]{
+  cat $file | from-json
 }
 
 fn filter [f @rest]{
