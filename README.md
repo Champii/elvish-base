@@ -235,6 +235,10 @@ If an optional arg is not given, it will take `(all)`
   For each item, the callback can return as many elements as wanted, that will be added with the original element into an array.
 
   ```
+  ~> put [1 10 100] | utils:zipMap [x]{ put (+ $x 1) (+ $x 2)}
+  ▶ [[1 2 3] [10 11 12] [100 101 102]]
+  ```
+  ```
   ~> fs:list_gt (fs:mega 100) | utils:zipMap $fs:pretty_size~ | utils:table_print
   file1.ext        2Go
   file13334.ext    133Mo
