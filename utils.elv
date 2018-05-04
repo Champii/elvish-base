@@ -11,17 +11,21 @@ fn json [file]{
 }
 
 fn filter [f a]{
-  for x $a {
+  @res = (for x $a {
     if ($f $x) {
       put $x
     }
-  }
+  })
+
+  put $res
 }
 
 fn map [f a]{
-  for x $a {
+  @res = (for x $a {
     put ($f $x)
-  }
+  })
+
+  put $res
 }
 
 #fn reduce [f arr acc]{
@@ -37,7 +41,7 @@ fn floor [x]{
 }
 
 fn zipMap [f arr]{
-  @res = (map [x]{
+  res = (map [x]{
     @in = ($f $x)
     put [$x $@in]
   } $arr)
@@ -47,10 +51,10 @@ fn zipMap [f arr]{
 fn _table_tab_size [arr]{
   @max = (repeat (count $arr[0]) 0)
 
-  utils:map [line]{
+  each [line]{
     i = 0
 
-    utils:map [item]{
+    each [item]{
       size = (count $item)
 
       if (> $size $max[$i]) {

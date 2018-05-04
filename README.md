@@ -96,18 +96,16 @@ use github.com/zzamboni/elvish-modules/util
 
   ```
   ~> fs:list_empty
-  ▶ foo
-  ▶ bar
+  ▶ [foo bar]
   ```
 
 - list_gt[number] => arr
 
-  Returns all files in current directory that greater than given size in bytes
+  Returns all files in current directory that are greater than given size in bytes
 
   ```
   ~> fs:list_gt (fs:mega 10)
-  ▶ foo
-  ▶ bar
+  ▶ [foo bar]
   ```
 
 - kilo[number] => number
@@ -177,7 +175,7 @@ use github.com/zzamboni/elvish-modules/util
 
   ```
   ~> utils:filter $fs:exists~ [/tmp/foo /tmp/bar]
-  ▶ /tmp/foo
+  ▶ [/tmp/foo]
   ```
 
 - map[func arr] => arr
@@ -186,8 +184,7 @@ use github.com/zzamboni/elvish-modules/util
 
   ```
   ~> utils:map $fs:exists~ [/tmp/foo /tmp/bar]
-  ▶ $true
-  ▶ $false
+  ▶ [$true $false]
   ```
 
 - floor[number|string] => number
@@ -206,8 +203,9 @@ use github.com/zzamboni/elvish-modules/util
   For each item, the callback can return as many elements as wanted, that will be added with the original element into an array.
 
   ```
-  ~> @list = (fs:list_gt (fs:mega 100))
-  ~> utils:zipMap $fs:pretty_size~ $list | fs:table_print (all)
+  ~> fs:list_gt (fs:mega 100) |
+     utils:zipMap $fs:pretty_size~ (all) |
+     utils:table_print (all)
   file1.ext        2Go
   file13334.ext    133Mo
   file23.ext       101Mo
