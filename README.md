@@ -16,13 +16,17 @@ epm:install                              \
   github.com/zzamboni/elvish-completions \
   github.com/zzamboni/elvish-modules
 
-use github.com/champii/elvish-base/git
+elvPath = $E:HOME"/.elvish"
+ownPath = $elvPath"/lib/github.com/champii/elvish-base"
+
 use github.com/champii/elvish-base/env
 use github.com/champii/elvish-base/alias
 use github.com/champii/elvish-base/prompt
 use github.com/champii/elvish-base/bindings
-use github.com/champii/elvish-base/fs
-use github.com/champii/elvish-base/utils
+
+-source $ownPath"/fs.elv"
+-source $ownPath"/utils.elv"
+-source $ownPath"/git.elv"
 
 use github.com/zzamboni/elvish-completions:git
 use github.com/zzamboni/elvish-modules/long-running-notifications
@@ -39,7 +43,7 @@ Signature type nomenclature follows the schema:
 func_name[arg1 arg2 optionalArg?] => return_type
 ```
 
-Optional args are achieved using `utils:optional_in~`. cf `map` or `filter` implementation.
+Optional args are achieved using `optional_in~`. cf `map` or `filter` implementation.
 
 If an optional arg is not given, it will take `(all)`
 
@@ -50,7 +54,7 @@ If an optional arg is not given, it will take `(all)`
   This method checks safely if the file exists
 
   ```
-  ~> fs:exists /tmp/foo
+  ~> exists /tmp/foo
   ▶ $true
   ```
 
@@ -61,7 +65,7 @@ If an optional arg is not given, it will take `(all)`
   Returns the size in bytes
 
   ```
-  ~> fs:size /tmp/foo
+  ~> size /tmp/foo
   ▶ 1024
   ```
 
@@ -72,7 +76,7 @@ If an optional arg is not given, it will take `(all)`
   Returns the approximative size in corresponding bytes order
 
   ```
-  ~> fs:size /tmp/foo
+  ~> size /tmp/foo
   ▶ 733Mo
   ```
 
@@ -83,7 +87,7 @@ If an optional arg is not given, it will take `(all)`
   Returns true if the size is 0
 
   ```
-  ~> fs:zero /tmp/foo
+  ~> zero /tmp/foo
   ▶ $false
   ```
 
@@ -94,7 +98,7 @@ If an optional arg is not given, it will take `(all)`
   Returns true if the file doesn't exists or if the size is 0
 
   ```
-  ~> fs:zero_or_null /i_dont_exist
+  ~> zero_or_null /i_dont_exist
   ▶ $true
   ```
 
@@ -103,7 +107,7 @@ If an optional arg is not given, it will take `(all)`
   Returns all files in current directory that are empty
 
   ```
-  ~> fs:list_empty
+  ~> list_empty
   ▶ [foo bar]
   ```
 
@@ -112,7 +116,7 @@ If an optional arg is not given, it will take `(all)`
   Returns all files in current directory that are greater than given size in bytes
 
   ```
-  ~> fs:list_gt (fs:mega 10)
+  ~> list_gt (mega 10)
   ▶ [foo bar]
   ```
 
@@ -121,7 +125,7 @@ If an optional arg is not given, it will take `(all)`
   Returns the number of kilo in bytes
 
   ```
-  ~> fs:kilo 10
+  ~> kilo 10
   ▶ 102400
   ```
 
@@ -130,7 +134,7 @@ If an optional arg is not given, it will take `(all)`
   Returns the number of mega in bytes
 
   ```
-  ~> fs:mega 10
+  ~> mega 10
   ▶ 1.048576e+07
   ```
 
@@ -139,7 +143,7 @@ If an optional arg is not given, it will take `(all)`
   Returns the number of giga in bytes
 
   ```
-  ~> fs:giga 10
+  ~> giga 10
   ▶ 1.073741824e+10
   ```
 
@@ -150,7 +154,7 @@ If an optional arg is not given, it will take `(all)`
   Returns the current branch, or fails if not a git repo
 
   ```
-  ~> git:branch
+  ~> branch
   ▶ master
   ```
 
@@ -159,7 +163,7 @@ If an optional arg is not given, it will take `(all)`
   Returns the last commit id from the current branch, or fails if not a git repo
 
   ```
-  ~> git:commit_id
+  ~> commit_id
   ▶ 3220a9726f4ccf04af79a7cf20d17ccce017fc51
   ```
 
@@ -168,7 +172,7 @@ If an optional arg is not given, it will take `(all)`
   Returns $true whenever there is some uncommited change
 
   ```
-  ~> git:is_dirty
+  ~> is_dirty
   ▶ $true
   ```
 
@@ -179,11 +183,11 @@ If an optional arg is not given, it will take `(all)`
   Returns a function with stdout and stderr discarded
 
   ```
-  ~> utils:null_out { cat /tmp/foo }
+  ~> null_out { cat /tmp/foo }
   ~>
   ```
   ```
-  ~> new_cat = { util:null_out { cat } }
+  ~> new_cat = { null_out { cat } }
   ~> $new_cat /tmp/foo
   ~>
   ```
@@ -193,7 +197,7 @@ If an optional arg is not given, it will take `(all)`
   Return true if the function has failed
 
   ```
-  ~> utils:has_failed { stat /tmp/foo }
+  ~> has_failed { stat /tmp/foo }
   ▶ $true
   ```
 
@@ -202,7 +206,7 @@ If an optional arg is not given, it will take `(all)`
   Return the parsed json map
 
   ```
-  ~> put (utils:json somefile.json)[somekey]
+  ~> put (json somefile.json)[somekey]
   ▶ someValue
   ```
 
@@ -213,7 +217,7 @@ If an optional arg is not given, it will take `(all)`
   If the last argument `arr` is not set, will take input from value channel
 
   ```
-  ~> utils:filter $fs:exists~ [/tmp/foo /tmp/bar]
+  ~> filter $exists~ [/tmp/foo /tmp/bar]
   ▶ [/tmp/foo]
   ```
 
@@ -224,7 +228,7 @@ If an optional arg is not given, it will take `(all)`
   If the last argument `arr` is not set, will take input from value channel
 
   ```
-  ~> utils:map $fs:exists~ [/tmp/foo /tmp/bar]
+  ~> map $exists~ [/tmp/foo /tmp/bar]
   ▶ [$true $false]
   ```
 
@@ -233,7 +237,7 @@ If an optional arg is not given, it will take `(all)`
   Floor the number
 
   ```
-  ~> utils:floor (/ 100 3)
+  ~> floor (/ 100 3)
   ▶ 33
   ```
 
@@ -264,11 +268,11 @@ If an optional arg is not given, it will take `(all)`
   For each item, the callback can return as many elements as wanted, that will be added with the original element into an array.
 
   ```
-  ~> put [1 10 100] | utils:zipMap [x]{ put (+ $x 1) (+ $x 2)}
+  ~> put [1 10 100] | zipMap [x]{ put (+ $x 1) (+ $x 2)}
   ▶ [[1 2 3] [10 11 12] [100 101 102]]
   ```
   ```
-  ~> fs:list_gt (fs:mega 100) | utils:zipMap $fs:pretty_size~ | utils:table_print
+  ~> list_gt (mega 100) | zipMap $pretty_size~ | table_print
   file1.ext        2Go
   file13334.ext    133Mo
   file23.ext       101Mo

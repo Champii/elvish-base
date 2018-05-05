@@ -1,6 +1,22 @@
 use github.com/champii/elvish-base/utils
 
 # fs utils
+fn isFile [x]{
+  not (utils:has_failed { test -f $x })
+}
+
+fn isDir [x]{
+  not (utils:has_failed { test -d $x })
+}
+
+fn type [x]{
+  if (isFile $x) {
+    put 'file'
+  } else {
+    put 'dir'
+  }
+}
+
 fn kilo [x]{
   * $x 1024
 }
@@ -64,3 +80,19 @@ fn list_gt [s]{
   utils:filter [x]{ >= (size $x) $s } $list
 }
 
+fn File [path]{
+  fileObj = [
+    &path=(path-abs $path)
+    &type=(type (path-abs $path))
+
+    &cat~={ e:cat $fileObj[path] }
+    &size~={ pretty_size $fileObj[path]}
+    &infos~={
+      echo Path: $fileObj[path]
+      echo Type: $fileObj[type]
+      echo Size: ($fileObj[size~])
+    }
+  ]
+
+  put $fileObj
+}
