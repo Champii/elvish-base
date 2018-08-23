@@ -187,7 +187,7 @@ If an optional arg is not given, it will take `(all)`
   ~>
   ```
   ```
-  ~> new_cat = { null_out { cat } }
+  ~> new_cat = [@rest]{ null_out { cat $@rest } }
   ~> $new_cat /tmp/foo
   ~>
   ```

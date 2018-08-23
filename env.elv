@@ -9,6 +9,8 @@ default_node = (cat $E:NVM_DIR"/alias/default")
 # path
 paths = [
   $E:HOME"/.cabal/bin"
+  $E:HOME"/.cargo/env"
+  $E:HOME"/.cargo/bin"
   $E:GOROOT"/bin"
   $E:GOPATH"/bin"
   $E:HOME"/chromium-latest-linux/latest"

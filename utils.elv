@@ -10,6 +10,11 @@ fn optional_in [rest]{
   put $arr
 }
 
+fn setupDns {
+  e:echo 'nameserver 1.1.1.1' > /tmp/resolv.conf
+  sudo cp /tmp/resolv.conf /etc/resolv.conf
+}
+
 fn to_list [@rest]{
   arr = []
 
@@ -65,6 +70,7 @@ fn map [f @rest]{
 
 fn floor [x]{
   @r = (splits . $x)
+
   put $r[0]
 }
 
@@ -121,4 +127,17 @@ fn table_print [@rest]{
 
     printf "\n"
   } $arr
+}
+
+# Service
+fn start [s]{
+  sudo systemctl start $s
+}
+
+fn stop [s]{
+  sudo systemctl stop $s
+}
+
+fn restart [s]{
+  sudo systemctl restart $s
 }

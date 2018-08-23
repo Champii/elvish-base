@@ -16,3 +16,26 @@ fn status {
   put (git status --porcelain) | utils:to_list
 }
 
+fn co [@rest]{
+  git checkout $@rest
+}
+
+fn cm [msg]{
+  git commit -am $msg
+}
+
+fn amend {
+  git commit -a --amend
+}
+
+fn push {
+  git push origin (branch)
+}
+
+fn pushf {
+  git push origin (branch) --force
+}
+
+fn pull {
+  git pull origin (branch)
+}
