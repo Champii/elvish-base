@@ -35,7 +35,12 @@ fn exists [filename]{
 }
 
 fn size [filename]{
-  put (stat --printf="%s" $filename)
+  os=(uname -s)
+  if (==s $os "Linux") {
+    put (stat --printf="%s" $filename)
+  } else {
+    put (stat -f %z $filename)
+  }
 }
 
 fn pretty_size [filename]{
