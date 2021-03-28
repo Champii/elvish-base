@@ -87,8 +87,8 @@ fn list_gt [s]{
 
 fn File [path]{
   fileObj = [
-    &path=(path-abs $path)
-    &type=(type (path-abs $path))
+    &path=(path:abs $path)
+    &type=(type (path:abs $path))
 
     &cat~={ e:cat $fileObj[path] }
     &size~={ pretty_size $fileObj[path]}
