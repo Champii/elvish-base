@@ -35,7 +35,7 @@ fn exists [filename]{
 }
 
 fn size [filename]{
-  os=(uname -s)
+  set os = (uname -s)
   if (==s $os "Linux") {
     put (stat --printf="%s" $filename)
   } else {
