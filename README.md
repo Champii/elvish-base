@@ -1,6 +1,10 @@
 # elvish-base
 Personal elvish files
 
+# DEPRECATION WARNING
+I don't use elvish anymore, and won't fix this lib for 0.17.0+.
+I will still accept proper PRs if you feel like it.
+
 # Usage
 
 You just have to put file in `~/.elvish/rc.elv` and `-source ~/.elvish/rc.elv`
